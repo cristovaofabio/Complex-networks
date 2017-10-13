@@ -1,0 +1,151 @@
+import networkx as nx
+from random import randint
+import time
+
+def gerarDict(dic=None,arestas=None,nos=None):
+	if dic is None:
+		dic=dict()
+	if arestas is None:
+		arestas=list()
+	if nos is None:
+		nos=list()
+	marcador=0
+	Abrir = open('teste','r')
+	for linha in Abrir:
+		vetor=linha.split() #quebrar linhas
+		if(vetor[0]=="#"):
+			marcador=1
+		if (marcador!=1):
+			numero=int(vetor[0])
+			if numero not in nos:
+				nos.append(numero)
+			if numero not in dic:
+				dic[numero]=[]
+		if (marcador==1 and vetor[0]!="#"):
+			arestas.append(vetor)
+			no1=int(vetor[0])
+			no2=int(vetor[1])
+			if no2 not in dic[no1]:
+				if no2!=no1:
+					dic[no1].append(no2)
+	return dic
+
+
+'''def gerarDict(grafo=None,arestas=None,nos=None):
+	#nesta função estou gerando uma lista adjacente de saida
+	if grafo is None:
+		grafo=nx.DiGraph() #grafo direcionado
+	if arestas is None:
+		arestas=list()
+	if nos is None:
+		nos=list()
+	marcador=0
+	Abrir = open('Texto_TGF.txt','r')
+	for linha in Abrir:
+		vetor=linha.split() #quebrar linhas
+		if(vetor[0]=="#"):
+			marcador=1
+		if (marcador!=1):
+			numero=int(vetor[0])
+			if numero not in nos:
+				nos.append(numero)
+		if (marcador==1 and vetor[0]!="#"):
+			arestas.append(vetor)
+			no1=int(vetor[0])
+			no2=int(vetor[1])
+			grafo.add_edge(no1,no2,weight=1)
+	return grafo
+	#print(len(grafo))'''
+
+
+def percorrerRota(v1,v2,possibilidades=None):
+	if possibilidades is None:
+		possibilidades=[]
+	possibilidades.append(v1) #usado para mostrar apenas uma rota 
+	#possibilidades=possibilidades+[v1] #usado para mostrar todas as rotas
+	if v1==v2:
+		#print(possibilidades)
+		EscreverArquivo(possibilidades)
+		#return possibilidades
+	for valor in dic[v1]:
+		if valor not in possibilidades:
+			if(valor!=v2 and dic[valor]!=[]):
+				rota=percorrerRota(valor,v2,possibilidades)
+				if (rota):
+					casos.append(rota)
+			elif(valor==v2):
+				rota=percorrerRota(valor,v2,possibilidades)
+				if (rota):
+					casos.append(rota)
+				#print(rota)
+	return None
+
+
+def caminho_aleatorio(Lista, origem,destino):
+	i=0
+	numero=origem
+	c=list()
+	while numero!=destino:
+		c.append(numero)
+		ultimo_elemento=c[-1] #utimo elemento da lista
+		tam_lista_elemento=len(Lista[ultimo_elemento])
+		w=Lista[ultimo_elemento][randint(0,(tam_lista_elemento-1))]
+		if w not in c:
+			c.append(w)		
+			i<-i+1
+			print(w)
+		numero=w
+
+def EscreverArquivo(vetor):
+	Arquivo = open('rotas.txt','a') # O 'a' serve para atualizar o arquivo, ou seja, sem perder antigas informações
+	Arquivo.writelines(str(vetor)+"\n") #escrever cada número em uma linha
+	Arquivo.close()
+
+def ler_aquivo():
+	Arquivo = open('rotas.txt','r')
+	linhas = Arquivo.read().splitlines() #pegar todas as linhas sem pular
+	matriz=list()
+	vetor=list()
+	for vetor_texto in linhas:
+		#print(vetor_texto)
+		for item in vetor_texto:
+			if item!=']' and item!='[' and item!=',' and item!=' ':
+				vetor.append(int(item))
+		matriz.append(vetor)
+		vetor=list()
+	Arquivo.close()
+	return matriz
+
+def distancia_media():
+	matriz=ler_aquivo()
+	contador=0
+	somatorio=0
+	for x in matriz:
+		contador=contador+1
+		somatorio=somatorio+(len(x)-1)
+		print(x,(len(x)-1))
+	print("Média das distâncias: ",somatorio/contador)
+	#print(matriz)
+
+Rotas=list()
+dic = gerarDict()
+caminho_aleatorio(dic,1,3)
+#casos=[]
+'''for x in dic:
+	inicio = time.time() #tempo inicial
+	for y in dic:
+		if (x!=y):
+			casos=[]
+			percorrerRota(x,y)
+	fim = time.time()
+	tempo_estimado=len(dic)*len(dic)*(fim - inicio)
+	print("Nó %d. Tempo busca de todas as rotas: %f"%(x,(tempo_estimado/60)))
+#print(percorrerRota(0,0))
+#print(Rotas)
+
+distancia_media()'''
+
+'''grafo = gerarDict()
+#lista=list(nx.all_shortest_paths(grafo,source=0,target=3)) #todos os caminhos mais curtos
+lista=list(nx.shortest_path(grafo,source=0,target=3)) #apenas um caminho curto
+print(lista)'''

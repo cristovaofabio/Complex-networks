@@ -1,0 +1,144 @@
+import networkx as nx
+#from tqdm import tqdm
+import time
+import sys
+import time
+
+def criar_grafo_estrela(nos):
+	grafo= nx.Graph() #nao direcionado
+	grafo.add_node(nos)
+	for x in range(1,nos):
+		grafo.add_node(x)
+		grafo.add_edge(nos,x,weight=1)
+	return grafo
+
+def gerarDict(grafo=None,arestas=None,nos=None):
+	#nesta função estou gerando uma lista adjacente de saida
+	if grafo is None:
+		grafo=nx.DiGraph() #grafo direcionado
+	if arestas is None:
+		arestas=list()
+	if nos is None:
+		nos=list()
+	marcador=0
+	Abrir = open('facebookTGF.txt','r')
+	for linha in Abrir:
+		vetor=linha.split() #quebrar linhas
+		if(vetor[0]=="#"):
+			marcador=1
+		if (marcador!=1):
+			numero=int(vetor[0])
+			if numero not in nos:
+				nos.append(numero)
+		if (marcador==1 and vetor[0]!="#"):
+			arestas.append(vetor)
+			no1=int(vetor[0])
+			no2=int(vetor[1])
+			grafo.add_edge(no1,no2,weight=1)
+	quant_arest=int(len(arestas))
+	print("Quantidade de arestas:",quant_arest)
+	return grafo
+	#print(len(grafo))
+
+def criar_grafo_linear(nos):
+	grafo= nx.Graph()
+	antes=1
+	grafo.add_node(antes)
+	for x in range(2,(nos+1)):
+		grafo.add_node(x)
+		grafo.add_edge(antes,x,weight=1)
+		antes=x
+	return grafo
+
+def criar_grafo_anel(nos):
+	grafo= nx.Graph()
+	antes=1
+	grafo.add_node(antes)
+	for x in range(2,(nos+1)):
+		grafo.add_node(x)
+		grafo.add_edge(antes,x,weight=1)
+		antes=x
+	grafo.add_edge(nos,1,weight=1)
+	return grafo
+
+TempoTotalEsperado=0.0
+
+def has_path(G, source, target):
+	try:
+		sp = nx.shortest_path(G,source, target)
+	except nx.exception.NetworkXNoPath:
+		return False
+	return True
+
+def menores_caminhos(grafo):
+	vetor_menores=dict()
+	for x in grafo:
+		inicio = time.time() #tempo inicial
+		for y in grafo:
+			if(x!=y and has_path(grafo,x,y)==True):
+				lista = list(nx.all_shortest_paths(grafo,source=x,target=y)) #todos os menores caminhos
+				vetor_menores[(x,y)] =lista
+		fim = time.time()
+		tempo_estimado=(fim - inicio)
+		print(tempo_estimado)
+	return vetor_menores
+
+def progressbar(it, prefix="",size=60):
+	count = len(it)
+	def _show(_i):
+		x = int(size*_i/count)
+		sys.stdout.write("%s[%s%s] %i/%i\r"%(prefix,"#"*x,"."*(size-x),_i,count))
+	_show(0)
+	for i, item in enumerate(it):
+		yield item
+		_show(i+1)
+	sys.stdout.write("\n")
+	sys.stdout.flush()
+
+
+def centralidade(menCaminhos,grafo):
+	tam = len(grafo)
+	soma_final=list()
+	for x in range(1,(tam+1)):
+		soma_final.append(0)
+	for chave in menCaminhos:
+		contador=0 #contar quantos vetores existem
+		registarNos=list()
+		presencas = grafo.node #contar a participação de cada nó
+		for x in presencas:
+			presencas[x]=0 #quantidade inicial de pessagens pelo nó
+		for vetor in menCaminhos[chave]:
+			contador=contador+1
+			tamanho=len(vetor)
+			if(tamanho>2):
+				for i in range(1,(tamanho-1)):
+					no_vetor=vetor[i] #nó encontrado no vetor
+					presencas[no_vetor]=presencas[no_vetor]+1
+					if no_vetor not in registarNos:
+						registarNos.append(no_vetor)
+		for y in registarNos:
+			presencas[y]=(presencas[y]/contador)
+			soma_final[(y-1)]=soma_final[(y-1)]+presencas[y]
+
+	return soma_final
+
+def imprimir_matriz(matriz):
+	tamanho_matriz = len(matriz)
+	for x in range(tamanho_matriz):
+		print((x+1),matriz[x])
+
+grafo = gerarDict()
+v=menores_caminhos(grafo)
+centr=centralidade(v,grafo)
+
+imprimir_matriz(centr)
+
+print()
+for x in v:
+	print(x)
+	for y in v[x]:
+		print("   ",y)
+print()
+print(nx.betweenness_centrality(grafo))
+
+#gerarDict()
