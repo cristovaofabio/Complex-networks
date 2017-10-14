@@ -1,6 +1,6 @@
 def lerArquivo(linhasIniciais,nos=None,arestas=None):
 	Abrir = open('base_de_dados/ipv6.txt','r')
-	NovoArquivo = open('base_de_dados/ipv6_TGF.txt','w')
+	NovoArquivo = open('ipv6_TGF.txt','w')
 	if nos is None:
 		nos=list()
 	if arestas is None:
