@@ -1,6 +1,6 @@
 def lerArquivo(linhasIniciais,nos=None,arestas=None):
-	Abrir = open('facebook.txt','r')
-	NovoArquivo = open('facebookTGF.txt','w')
+	Abrir = open('base_de_dados/ipv6.txt','r')
+	NovoArquivo = open('base_de_dados/ipv6_TGF.txt','w')
 	if nos is None:
 		nos=list()
 	if arestas is None:
@@ -11,17 +11,14 @@ def lerArquivo(linhasIniciais,nos=None,arestas=None):
 		if contador>linhasIniciais:
 			vetor=linha.split() #quebrar linhas
 			arestas.append(vetor) #adicionar arestas
-			for x in vetor:
+			for x in vetor[0:2]:
 				if x not in nos:
 					NovoArquivo.writelines(x+"\n") #escrever cada número em uma linha
 					nos.append(x)
 		contador=contador+1
 	NovoArquivo.writelines("#\n")
 	for pares in arestas:
-		if (int(pares[0])<30 and int(pares[1])<20):
-			NovoArquivo.writelines(pares[0]+" "+pares[1]+"\n")
-
-#def escreverArquivo():
+		NovoArquivo.writelines(pares[0]+" "+pares[1]+"\n")
 	
-lerArquivo(0) #quantidade de linhas iniciais que devem ser ignoradas
+lerArquivo(5375) #quantidade de linhas iniciais que devem ser ignoradas
 #print(texto)

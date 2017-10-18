@@ -10,7 +10,7 @@ def gerarDict(dic=None,arestas=None,nos=None):
 	if nos is None:
 		nos=list()
 	marcador=0
-	Abrir = open('base_de_dados/teste','r')
+	Abrir = open('base_de_dados/ipv6_TGF.txt','r')
 	for linha in Abrir:
 		vetor=linha.split() #quebrar linhas
 		if(vetor[0]=="#"):
@@ -43,7 +43,7 @@ def gerarDict(dic=None,arestas=None,nos=None):
 	if nos is None:
 		nos=list()
 	marcador=0
-	Abrir = open('Texto_TGF.txt','r')
+	Abrir = open('base_de_dados/ipv6_TGF.txt','r')
 	for linha in Abrir:
 		vetor=linha.split() #quebrar linhas
 		if(vetor[0]=="#"):
@@ -61,7 +61,8 @@ def gerarDict(dic=None,arestas=None,nos=None):
 	#print(len(grafo))'''
 
 
-def percorrerRota(v1,v2,possibilidades=None):
+#elaborado por Cristóvão
+'''def percorrerRota(v1,v2,possibilidades=None):
 	if possibilidades is None:
 		possibilidades=[]
 	possibilidades.append(v1) #usado para mostrar apenas uma rota 
@@ -81,9 +82,10 @@ def percorrerRota(v1,v2,possibilidades=None):
 				if (rota):
 					casos.append(rota)
 				#print(rota)
-	return None
+	return None'''
 
 
+#Proposto em sala de aula
 def caminho_aleatorio(Lista, origem,destino):
 	i=0
 	numero=origem
@@ -103,10 +105,10 @@ def caminho_aleatorio(Lista, origem,destino):
 		numero=w
 	return caminho
 
-def EscreverArquivo(vetor):
+'''def EscreverArquivo(vetor):
 	Arquivo = open('rotas.txt','a') # O 'a' serve para atualizar o arquivo, ou seja, sem perder antigas informações
 	Arquivo.writelines(str(vetor)+"\n") #escrever cada número em uma linha
-	Arquivo.close()
+	Arquivo.close()'''
 
 def distancia_media(rotas):
 	contador=0

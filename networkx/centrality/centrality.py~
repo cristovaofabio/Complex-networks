@@ -1,6 +1,7 @@
 import networkx as nx
 #from tqdm import tqdm
 import time
+import matplotlib.pyplot as plt
 import sys
 import time
 
@@ -21,7 +22,7 @@ def gerarDict(grafo=None,arestas=None,nos=None):
 	if nos is None:
 		nos=list()
 	marcador=0
-	Abrir = open('facebookTGF.txt','r')
+	Abrir = open('base_de_dados/ipv6_TGF.txt','r')
 	for linha in Abrir:
 		vetor=linha.split() #quebrar linhas
 		if(vetor[0]=="#"):
@@ -73,14 +74,11 @@ def has_path(G, source, target):
 def menores_caminhos(grafo):
 	vetor_menores=dict()
 	for x in grafo:
-		inicio = time.time() #tempo inicial
 		for y in grafo:
 			if(x!=y and has_path(grafo,x,y)==True):
 				lista = list(nx.all_shortest_paths(grafo,source=x,target=y)) #todos os menores caminhos
 				vetor_menores[(x,y)] =lista
 		fim = time.time()
-		tempo_estimado=(fim - inicio)
-		print(tempo_estimado)
 	return vetor_menores
 
 def progressbar(it, prefix="",size=60):
@@ -124,21 +122,36 @@ def centralidade(menCaminhos,grafo):
 
 def imprimir_matriz(matriz):
 	tamanho_matriz = len(matriz)
+	nos=list()
+	centralid=list()
 	for x in range(tamanho_matriz):
+		nos.append(x)
+		centralid.append(matriz[x])
 		print((x+1),matriz[x])
+	
+	graficoLinha(nos,centralid)
 
-grafo = gerarDict()
+def graficoLinha(x,y):
+	plt.plot(x,y, label='Centralidade')
+	plt.xlabel("Nó")
+	plt.ylabel("centralidade")
+	plt.title("Centralidade para cada nó do grafo")
+	plt.legend()
+	plt.show()
+
+grafo = criar_grafo_anel(9)
 v=menores_caminhos(grafo)
 centr=centralidade(v,grafo)
 
 imprimir_matriz(centr)
 
-print()
+'''print()
 for x in v:
 	print(x)
 	for y in v[x]:
-		print("   ",y)
-print()
-print(nx.betweenness_centrality(grafo))
+		print("   ",y)'''
+
+#vulnerabilidade utilizando o networkx, vale lembrar que os valores apresentados pelo networkx estão normalizados
+#print(nx.betweenness_centrality(grafo))
 
 #gerarDict()

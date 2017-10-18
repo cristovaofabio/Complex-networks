@@ -1,6 +1,6 @@
 def lerArquivo(linhasIniciais,nos=None,arestas=None):
 	Abrir = open('facebook.txt','r')
-	NovoArquivo = open('grafoTGF.txt','w')
+	NovoArquivo = open('facebookTGF.txt','w')
 	if nos is None:
 		nos=list()
 	if arestas is None:

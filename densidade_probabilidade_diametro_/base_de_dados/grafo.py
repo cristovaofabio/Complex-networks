@@ -2,6 +2,10 @@
 #Abaixo se encontra uma grafo não direcionado sem peso
 dic = { 1:[2,3,4], 2:[1,3],3:[2,1],4:[1]}
 #Obervação: caso tenha pesos nas arestas, crie uma matriz para guardar os valores
+
+
+import networkx as nx
+
 def criar_matriz(tamanho):
 	matriz=[]
 	for i in range(tamanho):
@@ -30,7 +34,7 @@ def gerarDict(dic=None,arestas=None,nos=None):
 	if nos is None:
 		nos=list()
 	marcador=0
-	Abrir = open('facebookTGF.txt','r')
+	Abrir = open('ipv6_TGF.txt','r')
 	for linha in Abrir:
 		vetor=linha.split() #quebrar linhas
 		if(vetor[0]=="#"):
@@ -47,7 +51,6 @@ def gerarDict(dic=None,arestas=None,nos=None):
 			no2=int(vetor[1])
 			if no2 not in dic[no1]:
 				dic[no1].append(no2)
-			#A Linha abaixo é utilizada para grafos não direcionados
 			if no1 not in dic[no2]:
 				dic[no2].append(no1)
 			

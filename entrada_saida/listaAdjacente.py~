@@ -107,7 +107,7 @@ def grafo_entrada(grafo):
 		#	if x in ralos:
 		#		print("Ralos: ",x)
 	
-	histograma_grafo(entrada)
+	#histograma_grafo(entrada)
 	#return entrada
 	
 def procurar_aresta(grafo):

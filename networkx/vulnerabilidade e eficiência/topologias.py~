@@ -1,10 +1,29 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import time
 
 def distancia(grafo):
 	total=0
 	contador=0
 	SomaEfi=0
+	'''soma=0
+	path=nx.all_pairs_shortest_path(grafo) #todas as distâncias entre todos os pares de nós
+	for chave in path:
+		rotas=path[chave]
+		#inicio = time.time() #tempo inicial
+		for x in rotas:
+			if(x!=chave):
+				soma=(len(rotas[x])-1)
+				SomaEfi=SomaEfi+(1/soma)
+				contador=contador+1
+				total=total+soma
+		#fim = time.time() #tempo final
+		#print("Nó %d. Tempo de todas as rotas: %f"%(chave,(fim-inicio)))
+
+	#print("Eficiencia: %.4f "%(SomaEfi/contador)) #mostro a média das eficiências
+	valor=(SomaEfi/contador)
+	return valor'''
+
 	for x in grafo:
 		for y in grafo:
 			if y!=x:
@@ -24,6 +43,7 @@ def distancia(grafo):
 				SomaEfi=SomaEfi+(1/soma)
 				#soma das distância
 				total=total+soma
+
 	dist=(total/contador)
 	nos=len(grafo)
 	todasArestas=nos*(nos-1)/2 #todas as arestas possiveis
@@ -31,6 +51,63 @@ def distancia(grafo):
 	print("Eficiencia: %.4f "%(SomaEfi/contador)) #mostro a média das eficiências
 	Efici=(SomaEfi/contador)
 	return Efici
+
+'''def gerarDict(dic=None,arestas=None,nos=None):
+	if dic is None:
+		dic=dict()
+	if arestas is None:
+		arestas=list()
+	if nos is None:
+		nos=list()
+	marcador=0
+	Abrir = open('base_de_dados/ipv6_TGF.txt','r')
+	for linha in Abrir:
+		vetor=linha.split() #quebrar linhas
+		if(vetor[0]=="#"):
+			marcador=1
+		if (marcador!=1):
+			numero1=int(vetor[0]) #primeiro numero
+			if numero1 not in nos:
+				nos.append(numero1)
+			if numero1 not in dic:
+				dic[numero1]=[]
+		if (marcador==1 and vetor[0]!="#"):
+			arestas.append(vetor)
+			no1=int(vetor[0])
+			no2=int(vetor[1])
+			if no2 not in dic[no1]:
+				if no2!=no1:
+					dic[no1].append(no2)
+			if no1 not in dic[no2]:
+				if no2!=no1:
+					dic[no2].append(no1)
+	return dic'''
+
+def gerarDict(grafo=None,arestas=None,nos=None):
+	#nesta função estou gerando uma lista adjacente de saida
+	if grafo is None:
+		grafo=nx.Graph() #grafo não direcionado
+	if arestas is None:
+		arestas=list()
+	if nos is None:
+		nos=list()
+	marcador=0
+	Abrir = open('base_de_dados/teste','r')
+	for linha in Abrir:
+		vetor=linha.split() #quebrar linhas
+		if(vetor[0]=="#"):
+			marcador=1
+		if (marcador!=1):
+			numero=int(vetor[0])
+			if numero not in nos:
+				nos.append(numero)
+		if (marcador==1 and vetor[0]!="#"):
+			arestas.append(vetor)
+			no1=int(vetor[0])
+			no2=int(vetor[1])
+			grafo.add_edge(no1,no2,weight=1)
+	return grafo
+	#print(len(grafo))
 
 def CaminhoExiste(G,no1,no2):
 	try:
@@ -68,7 +145,7 @@ def criar_grafo_anel(nos):
 		antes=x
 	grafo.add_edge(nos,0,weight=1)
 	return grafo
-
+'''
 
 def graficoLinha(x,y):
 	plt.plot(x,y, label='Legenda da linha')
@@ -90,23 +167,25 @@ def arestasRestantes(grafo):
 				if [y,x] not in arestas:
 					aRestantes.append([y,x])
 	return aRestantes
+'''
 
 def adicionar_aresta(graf,aresta):
 	graf.add_edge(aresta[0],aresta[1],weight=1)
 	return graf
 
+'''
 def arestas_presentes(grafo):
 	arestas=list() #guardar todas as arestas presentes
 	for y in grafo:
 		for x in grafo[y]:
 			arestas.append([y,x])
-	return arestas
+	return arestas'''
 
 def remover_aresta(graf,aresta):
 	graf.remove_edge(aresta[0],aresta[1])
 	return graf
 
-def maior_eficiencia(dicionario,eficiencia_inicial):
+'''def maior_eficiencia(dicionario,eficiencia_inicial):
 	maior=0.0;
 	aresta=()
 	for x in dicionario:
@@ -117,7 +196,7 @@ def maior_eficiencia(dicionario,eficiencia_inicial):
 	print("Aresta de maior Eficiência: ",aresta, end="")
 	print(" ----- %.4f"%maior)
 	efi_ini=float(eficiencia_inicial)
-	print("Vulnerabilidade: %.4f"%(efi_ini-maior))
+	print("Vulnerabilidade: %.4f"%(efi_ini-maior))'''
 		
 	
 
@@ -157,15 +236,50 @@ def vulnerabilidade(Graf):
 			Graf.add_edge(no,y,weight=1)'''
 
 
-quant_nos=13 #quantidade de nós no meu grafo
-grafo = criar_grafo_linear(quant_nos-1)
+def graficoLinha(x,y):
+	plt.plot(x,y, label='Evolução da eficiência')
+	plt.xlabel("Quantidade de nós")
+	plt.ylabel("Eficiência")
+	plt.title("Eficiência")
+	plt.legend()
+	plt.show()
+
+
+#calculo e projeção das eficiências
+
+'''eficiencias=list()
+nos=list()
+
+for x in range(1,15):
+	quant_nos=x #quantidade de nós no meu grafo começando de zero
+	grafo = criar_grafo_anel(quant_nos)
+	#vulnerabilidade(grafo)
+
+	#arestas_restantes=arestasRestantes(grafo)
+	
+
+	eficiencia_inicial=distancia(grafo)
+	eficiencias.append(eficiencia_inicial)
+	nos.append(quant_nos+1)
+
+'''
+
+#calculo da vulnerabilidade
+
+quant_nos=8 #quantidade de nós no meu grafo começando de zero
+grafo = criar_grafo_estrela(quant_nos)
 vulnerabilidade(grafo)
 
-'''arestas_restantes=arestasRestantes(grafo)
-eficiencia_inicial=distancia(grafo)
+#arestas_restantes=arestasRestantes(grafo)
 
 
-dic_eficiencias=dict()
+#eficiencia_inicial=distancia(grafo)
+#eficiencias.append(eficiencia_inicial)
+#nos.append(quant_nos+1)
+
+#graficoLinha(nos,eficiencias)
+
+'''dic_eficiencias=dict()
 
 for x in arestas_restantes:
 	grafo=adicionar_aresta(grafo,x)
