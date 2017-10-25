@@ -6,6 +6,8 @@ dic = { "A" : { "B" : 1},
           "D" : { "B": 2 },
           }
 
+import matplotlib.pyplot as plt
+
 def gerarDict(dic=None,arestas=None,nos=None):
 	#Nesta função estou gerando uma lista adjacente de saida
 	if dic is None:
@@ -139,15 +141,25 @@ def densidade(dic):
 	quantMaxima=quantNos*(quantNos-1)/2 #se não for direcionado
 	print("Densidade: %.2f"%(aresta/quantMaxima))
 
+def graficoLinha(x,y):
+	plt.plot(x,y, label='Probabilidades')
+	plt.xlabel("Grau")
+	plt.ylabel("Probabilidade")
+	plt.title("Probabilidade de encontrar um grau")
+	plt.legend()
+	plt.show()
+
 def probabilidade(dic,grau):
-	contador=0
+	'''contador=0
 	for chave in dic:
 		if len(dic[chave])==grau:
 			contador=contador+1
 	prob=contador/len(dic)
-	print("Probabilidade de econtrar um nó com grau %d: %.2f"%(grau,prob))
+	print("Probabilidade de econtrar um nó com grau %d: %.2f"%(grau,prob))'''
 
-	'''graus=dict()
+	probabilidade=list()
+	gra=list()
+	graus=dict()
 	for chave in dic:
 		gr=len(dic[chave])
 		if gr not in graus:
@@ -158,7 +170,11 @@ def probabilidade(dic,grau):
 
 	for chave in graus:
 		prob=graus[chave]/len(dic)
-		print("Probabilidade de econtrar um nó com grau %d: %.2f"%(chave,prob))'''
+		print("Probabilidade de econtrar um nó com grau %d: %.2f"%(chave,prob))
+		gra.append(chave)
+		probabilidade.append(prob)
+
+	graficoLinha(gra,probabilidade)
 
 soma=0
 diamet=0
