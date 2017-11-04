@@ -1,4 +1,6 @@
 import networkx as nx
+from numpy import *
+import matplotlib.pyplot as plt
 
 def gerarGrafo(grafo=None,arestas=None,nos=None):
 	#Nesta função estou gerando uma lista adjacente de saida
@@ -63,9 +65,12 @@ print("Diâmetro: ",nx.diameter(grafo))
 
 n=len(grafo) #número de nós
 p=d #probabilidade de encontrar cada aresta do grafo
+print(p)
 grafo_aleatorio = nx.gnp_random_graph(n,p) #grafo aleatório direcionado Erdos-Rényi
 
 print("\nPara o grafo aleatório")
 grafo_saida(grafo_aleatorio)
 print("Diâmetro: ",nx.diameter(grafo_aleatorio))
-#imprimir_grafo(grafo_aleatorio)'''
+print(nx.is_connected(grafo_aleatorio))
+#imprimir_grafo(grafo_aleatorio)
+
