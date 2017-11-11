@@ -2,7 +2,7 @@ import networkx as nx
 import pandas as pd
 import matplotlib.pyplot as plt
 
-grafo= nx.Graph() #criar um grafo nao direcionado
+#grafo= nx.Graph() #criar um grafo nao direcionado
 #grafo= nx.DiGraph() #criar um grafo direcionado
 
 '''grafo.add_node(1)
@@ -57,7 +57,7 @@ def distancia(grafo):
 				for num in range(len(vetor)-1):
 					numero1=vetor[num]
 					numero2=vetor[num+1]
-					soma=soma+grafo[numero1][numero2]['weight'] #distancia do percurso
+					soma=soma+1 #distancia do percurso
 				contador=contador+1
 				SomaEfi=SomaEfi+(1/soma) #soma das eficiencias(cada par de nós possue apenas uma)
 				total=total+soma #soma das distância
