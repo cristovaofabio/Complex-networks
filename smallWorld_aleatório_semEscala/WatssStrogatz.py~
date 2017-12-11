@@ -17,36 +17,6 @@ def draw_grafo(grafo):
 	nx.draw(grafo,node_color='green',with_labels=True)
 	plt.show()
 
-
-def gerarGrafo(grafo=None,arestas=None,nos=None):
-	#Nesta função estou gerando uma lista adjacente de saida
-	if grafo is None:
-		grafo= nx.Graph() #criar um grafo nao direcionado
-	if arestas is None:
-		arestas=list()
-	marcador=0
-	Abrir = open('base_de_dados/facebook_TGF.txt','r')
-	for linha in Abrir:
-		vetor=linha.split() #quebrar linhas
-		if(vetor[0]=="#"):
-			marcador=1
-		if (marcador!=1):
-			numero=int(vetor[0])
-			if numero not in grafo:
-				grafo.add_node(numero)
-		if (marcador==1 and vetor[0]!="#"):
-			arestas.append(vetor)
-			peso=1
-			if len(vetor)==3:
-				peso = int(vetor[2]) #caso tenha aresta com peso
-			no1=int(vetor[0])
-			no2=int(vetor[1])
-			grafo.add_edge(no1, no2,weight=peso)
-
-	Abrir.close() #fechar arquivo
-	return grafo
-
-
 def percorrer_dicionario(dicionario,p):
 	eixoX=list()
 	eixoY=list()
@@ -84,7 +54,6 @@ def grafo_saida(grafo,p):
 
 		#print("Grau de saida do nó %d: %d"%(x,arest))
 		soma=soma+arest
-	print("Diâmetro: ",nx.diameter(grafo))
 	percorrer_dicionario(graus,p) #dicionario com a frequência de cada grau
 
 	#print("Quantidade de arestas:",soma/2)
@@ -127,12 +96,6 @@ def distancia(grafo):
 	print("Eficiencia média: %.2f"%(SomaEfi/contador))
 	eficiencias.append((SomaEfi/contador))
 
-
-grafoB = gerarGrafo()
-nos = len(grafoB) #quantidade de nós no grafo
-arestas=grafoB.edges() #todas as arestas do grafo
-quant_aresta=len(arestas) #quantidade de arestas no grafo
-
 eficiencias=list()
 dist_media=list()
 diamet=list()
@@ -141,24 +104,26 @@ props=list()
 #print("Para a base de dados: ")
 #print("Diâmetro: ",nx.diameter(grafoB))
 
-k=int((2*quant_aresta)/nos) #quantidade de vizinhos que cada nó deve ter
-
 p=0.0
-while(p<1):
+'''while(p<1):
 	grafo=nx.watts_strogatz_graph(30,4,p)
 	props.append(p)
 	print(p)
 	#grafo_saida(grafo,p)
-	print("Diâmetro: ",nx.diameter(grafo))
-	diamet.append(nx.diameter(grafo))
+	diametro=nx.diameter(grafo)
+	print("Diâmetro: ",diametro)
+	diamet.append(diametro)
 	distancia(grafo)
 	print("")
 	p=p+0.1
 
-#grafico(eficiencias,props,"Eficiência")
+#Para gerar os gráficos
+grafico(eficiencias,props,"Eficiência")
 grafico(dist_media,props,"Distância média")
 grafico(diamet,props,"Diâmetro")
 
 plt.grid(True)
-plt.show()
+plt.show()'''
+grafo=nx.watts_strogatz_graph(30,4,1)
+draw_grafo(grafo)
 

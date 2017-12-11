@@ -62,6 +62,15 @@ def percorrer_dicionario(dicionario,p):
 	plt.ylabel("Quantidade")
 	plt.legend()
 
+
+def grafico(valores,prs,legenda):
+
+	plt.plot(prs, valores,label=legenda)
+	plt.xlabel("p")
+	plt.ylabel("valores")
+	plt.legend()
+
+
 def grafo_saida(grafo,p):
 	soma=0
 	graus=dict()
@@ -114,13 +123,20 @@ def distancia(grafo):
 				total=total+soma
 	dist=(total/contador)
 	print("Distancia média: %.2f"%dist)
+	dist_media.append(dist)
 	print("Eficiencia média: %.2f"%(SomaEfi/contador))
+	eficiencias.append((SomaEfi/contador))
 
 
 grafoB = gerarGrafo()
 nos = len(grafoB) #quantidade de nós no grafo
 arestas=grafoB.edges() #todas as arestas do grafo
 quant_aresta=len(arestas) #quantidade de arestas no grafo
+
+eficiencias=list()
+dist_media=list()
+diamet=list()
+props=list()
 
 #print("Para a base de dados: ")
 #print("Diâmetro: ",nx.diameter(grafoB))
@@ -130,13 +146,19 @@ k=int((2*quant_aresta)/nos) #quantidade de vizinhos que cada nó deve ter
 p=0.0
 while(p<1):
 	grafo=nx.watts_strogatz_graph(30,4,p)
+	props.append(p)
 	print(p)
 	#grafo_saida(grafo,p)
 	print("Diâmetro: ",nx.diameter(grafo))
+	diamet.append(nx.diameter(grafo))
 	distancia(grafo)
 	print("")
 	p=p+0.1
 
-#plt.grid(True)
-#plt.show()
+grafico(eficiencias,props,"Eficiência")
+grafico(dist_media,props,"Distância média")
+grafico(diamet,props,"Diâmetro")
+
+plt.grid(True)
+plt.show()
 

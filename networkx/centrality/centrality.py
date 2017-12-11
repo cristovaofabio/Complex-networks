@@ -139,7 +139,7 @@ def graficoLinha(x,y):
 	plt.legend()
 	plt.show()
 
-grafo = criar_grafo_estrela(9)
+grafo = criar_grafo_anel(4)
 v=menores_caminhos(grafo)
 centr=centralidade(v,grafo)
 
