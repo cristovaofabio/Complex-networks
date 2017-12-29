@@ -1,0 +1,124 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+from collections import OrderedDict
+
+arestas=list()
+
+def gerarGrafo(grafo=None,nos=None):
+	#Nesta função estou gerando uma lista adjacente de saida
+	if grafo is None:
+		grafo= nx.Graph() #criar um grafo nao direcionado
+	Abrir = open('marvel.txt','r')
+	peso=1
+	for linha in Abrir:
+		linha = linha.rstrip('\n') # serve para eliminar o '\n'
+		vetor=linha.split("---") #quebrar linhas
+		no1=vetor[0]
+		no2=vetor[1]
+		arestas.append([no1,no2]) #arestas
+		grafo.add_edge(no1, no2,weight=peso)
+
+	Abrir.close() #fechar arquivo
+	return grafo
+
+def draw_grafo(grafo):
+	#grafo=nx.cubical_graph() #exemplo de grafo cúbico
+	#nx.draw(grafo) # desenhar um grafo sem legenda
+	nx.draw(grafo,node_color='skyblue',with_labels=False)
+	plt.show()
+
+def imprimir_grafo(grafo):
+	for x in grafo:
+		print(x,grafo[x])
+
+def densidade(dic):
+	aresta=0
+	for chave in dic:
+		aresta=aresta+len(dic[chave])
+	aresta=aresta/2 #se não for direcionado
+	quantNos=len(dic)
+	#quantMaxima=quantNos*(quantNos-1) #se for direcionado
+	quantMaxima=quantNos*(quantNos-1)/2 #se não for direcionado
+	dens=(aresta/quantMaxima)
+	print("Densidade: %.2f"%dens)
+	return dens
+
+def percorrer_dicionario(dicionario):
+	eixoX=list()
+	eixoY=list()
+	dicionario =OrderedDict(sorted(dicionario.items(), key=lambda t: t[0])) #ordenar o dicionario
+	for x in dicionario:
+		eixoX.append(x)
+		eixoY.append(dicionario[x])
+		#print(x,dicionario[x])
+
+	legenda="Herois da Marvel"
+	plt.plot(eixoX, eixoY,label=legenda)
+	plt.xlabel("Participações")
+	plt.ylabel("Quantidade")
+	plt.legend()
+
+def grafo_saida(grafo):
+	soma=0
+	graus=dict()
+
+	nome_maior=""
+	nome_menor=""
+	tamanho_maior=0
+	tamanho_menor=100000000000000
+	visinhos=0
+
+	for x in grafo:
+		arest=len(grafo[x])
+		if (arest not in graus):
+			graus[arest]=1
+		else:
+			graus[arest]=graus[arest]+1
+
+		print("Grau de saida do nó %s: %d"%(x,arest))
+		visinhos=visinhos+arest
+		if(arest>=tamanho_maior):
+			nome_maior=x
+			tamanho_maior=arest
+		if(arest<=tamanho_menor):
+			nome_menor=x
+			tamanho_menor=arest
+		soma=soma+1
+
+	print("Personagem que mais trabalhou: ",nome_maior)
+	print(tamanho_maior)
+	print("Personagem que menos trabalhou: ",nome_menor)
+	print(tamanho_menor)
+	print("Quantidade media de vizinhos: %.1f"%(visinhos/len(grafo)))
+	#percorrer_dicionario(graus)
+	#print(soma)
+	#print("Diâmetro: ",nx.diameter(grafo))
+	#percorrer_dicionario(graus,n,m) #dicionario com a frequência de cada grau
+
+	#print("Quantidade de arestas:",soma/2)
+
+
+def probabilidade(dic,grau):
+	contador=0
+	for chave in dic:
+		if len(dic[chave])>=grau:
+			contador=contador+1
+	prob=contador/len(dic)
+	print("Probabilidade de econtrar um personagem que trabalhou com pelo menos %d parceiros: %.2f"%(grau,prob))
+
+grafo=gerarGrafo()
+'''for x in range(4,11,2):
+	probabilidade(grafo,x)'''
+
+#imprimir_grafo(grafo)
+#grafo_saida(grafo)
+#draw_grafo(grafo)
+
+#plt.grid(True)
+#plt.show()
+
+n=len(grafo) #número de nós
+p=densidade(grafo) #probabilidade de encontrar cada aresta do grafo
+grafo_aleatorio = nx.gnp_random_graph(n,p) #grafo aleatório direcionado Erdos-Rényi
+
+print("Diâmetro: ",nx.diameter(grafo_aleatorio))
